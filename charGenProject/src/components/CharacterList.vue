@@ -1,9 +1,13 @@
 <template>
-<button @click="fetchCharacters">Click</button>
-<div v-for="character in characters" :key="character.id">
-  {{ character.char_name }}
-  {{ character.char_lvl }}
+<div class="columnContainer">
+  <div class="columnElem">Name</div><span class="tab"></span>
+  <div class="columnElem">Level</div><span class="tab"></span>
 </div>
+<div v-for="character in characters" :key="character.id" class="charContainer">
+  <div class="charElem">{{ character.char_name }}</div><span class="tab"></span> 
+  <div class="charElem">{{ character.char_lvl }}</div><span class="tab"></span>
+</div>
+<br><button @click="fetchCharacters">Load</button>
 </template>
 <script>
 export default {
@@ -26,3 +30,25 @@ export default {
     },
   }
 </script>
+<style scoped>
+.tab{
+  display: inline-block;
+  margin-left: 4em;
+}
+.charContainer{
+  display: flex;
+}
+.columnContainer{
+  display: flex;
+  border-style: none none solid none;
+  border-color: white;
+  margin-bottom: 4px;
+}
+.charElem{
+ width: 1.5em;
+}
+.columnElem{
+ width: 1em;
+ color: white;
+}
+</style>
