@@ -7,8 +7,7 @@
 </template>
 <script>
 export default {
-    components:{
-    },
+    components:{},
     data() {
       return {
         characterName: "",
@@ -16,6 +15,7 @@ export default {
       }
     },
     methods: {
+        //Inserts values into the characters table in the database
         charInsert(){
             fetch('http://localhost/characterGen_be/CharacterListInsert.php', {
             method: "POST",
