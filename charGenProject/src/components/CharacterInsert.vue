@@ -1,17 +1,36 @@
 <template>
-<input type="text" v-model="characterName" placeholder="name">
-<input type="text" v-model="characterLvl" placeholder="level">
-<button @click="charInsert">insert</button>
-<div>{{ characterName }}</div>
-<div>{{ characterLvl }}</div>
+  <div class="topContainer">
+    <input type="text" v-model="characterName" placeholder="Character name">
+    <div>Race: 
+      <select v-model="raceTitle">
+      <option disabled value="">Select a Race</option>
+      <option value="">A</option>
+      <!-- <option v-for="races in 49" :value="races.value">
+      {{charOptions[races-1].race_title}}
+      </option> -->
+    </select>
+    </div>
+    <div>Class: 
+      <select>
+      <option disabled value="">Select a Class</option>
+      </select>
+    </div>
+  </div>
+  <br><br><br><div>Selected race: {{ raceTitle }}</div>
+<br><br><br><button @click="charInsert">insert</button>
 </template>
 <script>
 export default {
+    mounted(){
+      this.onWindowLoad();
+    },
     components:{},
     data() {
       return {
         characterName: "",
-        characterLvl: ""
+        characterLvl: "",
+        charOptions: "", // 0/48 = races || 49/66 = backgrounds || 67/79 = classes || 80/198 = subclasses
+        // characterRace: charOptions.indexOf(raceTitle)
       }
     },
     methods: {
@@ -25,8 +44,28 @@ export default {
             body: JSON.stringify({
                 char_name: this.characterName,
                 char_lvl: this.characterLvl
+              })
             })
-        })
-    },
-  }}
+        },
+        fetchOptions(){
+          fetch('http://localhost/characterGen_be/DataOptions.php')
+          .then(response => response.json())
+          .then(data => {
+            this.charOptions = data
+            console.log(this.charOptions)
+          })
+        },
+        onWindowLoad(){
+          console.log("window load event");
+          this.fetchOptions();
+        }
+    }
+  }
 </script>
+<style scoped>
+  .topContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+</style>
