@@ -10,10 +10,13 @@
   <div class="charElem">{{ character.char_lvl }}</div><span class="tab"></span>
   <div class="charElem">{{ character.race_title }}</div><span class="tab"></span>
 </div>
-<br><button @click="fetchCharacters">Load</button>
+<!-- <br><button @click="fetchCharacters">Load</button> -->
 </template>
 <script>
 export default {
+  mounted(){
+      this.onWindowLoad();
+    },
     components:{},
     data() {
       return {
@@ -29,7 +32,11 @@ export default {
           this.characters = data
           console.log(this.characters)
         })
-      }
+      },
+      onWindowLoad(){
+          console.log("window load event");
+          this.fetchCharacters();
+        }
     }}
 </script>
 <style scoped>
