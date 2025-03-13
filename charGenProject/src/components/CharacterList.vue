@@ -41,10 +41,7 @@ export default {
 </script>
 <style scoped>
 /* Is used for spacing between the character properties & columns */
-.tab{
-  display: inline-block;
-  margin-left: 4em;
-}
+
 /* Container that holds all characters */
 .charContainer{
   display: flex;

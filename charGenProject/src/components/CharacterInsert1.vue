@@ -1,6 +1,5 @@
 <template>
   <div class="topContainer">
-<<<<<<< HEAD
     
     <input type="text" v-model="nameInput" placeholder="Character name">
 
@@ -31,26 +30,6 @@
   </div>
   <br><br><br><br><br><br>
 <button @click="charInsert">insert</button>
-=======
-    <input type="text" v-model="characterName" placeholder="Character name">
-    <div>Race: 
-      <select v-model="raceTitle">
-      <option disabled value="">Select a Race</option>
-      <option value="">A</option>
-      <!-- <option v-for="races in 49" :value="races.value">
-      {{charOptions[races-1].race_title}}
-      </option> -->
-    </select>
-    </div>
-    <div>Class: 
-      <select>
-      <option disabled value="">Select a Class</option>
-      </select>
-    </div>
-  </div>
-  <br><br><br><div>Selected race: {{ raceTitle }}</div>
-<br><br><br><button @click="charInsert">insert</button>
->>>>>>> 5cd339b5896ed09189cf60bcade1de1719f8da6a
 </template>
 <script>
 export default {
@@ -60,7 +39,6 @@ export default {
     components:{},
     data() {
       return {
-<<<<<<< HEAD
         nameInput: "",
         raceInput: "",
         classInput: "",
@@ -76,12 +54,6 @@ export default {
           classes: [],
           sublasses: []
         }
-=======
-        characterName: "",
-        characterLvl: "",
-        charOptions: "", // 0/48 = races || 49/66 = backgrounds || 67/79 = classes || 80/198 = subclasses
-        // characterRace: charOptions.indexOf(raceTitle)
->>>>>>> 5cd339b5896ed09189cf60bcade1de1719f8da6a
       }
     },
     methods: {
@@ -101,7 +73,6 @@ export default {
         fetchOptions(){
           fetch('http://localhost/characterGen_be/DataOptions.php')
           .then(response => response.json())
-<<<<<<< HEAD
           // 0/48 = races || 49/66 = backgrounds || 67/79 = classes || 80/198 = subclasses
           .then(data => {
             data.forEach((option, index) => {
@@ -122,13 +93,6 @@ export default {
             this[data].value = this[data].maxValue
           }
         },
-=======
-          .then(data => {
-            this.charOptions = data
-            console.log(this.charOptions)
-          })
-        },
->>>>>>> 5cd339b5896ed09189cf60bcade1de1719f8da6a
         onWindowLoad(){
           console.log("window load event");
           this.fetchOptions();

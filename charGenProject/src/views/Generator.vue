@@ -25,7 +25,11 @@ export default{
     },
 }
 </script>
-<style scoped>
+<style>
+    .tab{
+    display: inline-block;
+    margin-left: 4em;
+    }
     .header{
         display: flex;
         width: 99vw;
