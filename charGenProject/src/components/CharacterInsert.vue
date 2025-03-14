@@ -5,40 +5,71 @@
 
     <div class="topElement" v-if="charOptions.races.length !== 0">Race: 
       <select v-model="raceInput">
-      <option disabled value="">Select a Race</option>
-      <option v-for="race in charOptions.races" :value="race.id">
-      {{race.race_title}}
-      </option>
+        <option disabled value="">Select a Race</option>
+        <option v-for="race in charOptions.races" :value="race.id">
+        {{race.race_title}}
+        </option>
     </select>
     </div>
 
-    <div class="classContainer">
-      <div class="topElement" v-if="charOptions.classes.length !== 0">Class: 
-        <select v-model="classInput">
-          <option disabled value="">Select a Class</option>
-          <option v-for="charClass in charOptions.classes" :value="charClass.id">
-            {{ charClass.class_title }}
-          </option>
-        </select>
+    <div class="topElement" v-if="charOptions.backgrounds.length !== 0">Background: 
+      <select v-model="bgInput">
+        <option disabled value="">Select Background</option>
+        <option v-for="bg in charOptions.backgrounds" :value="bg.id">
+          {{bg.bg_title}}
+        </option>
+      </select>
+    </div>
 
-        <NrSelector :input="classLvlInput"></NrSelector>
+    <div class="classContainer" v-if="charOptions.classes.length !== 0">
+      <div class="topElement" >
+        <div class="classElement">
+          <div class="topElement">Class: 
+            <select v-model="classInput">
+              <option disabled value="">Select a Class</option>
+              <option v-for="charClass in charOptions.classes" :value="charClass.id">
+                {{ charClass.class_title }}
+              </option>
+            </select>
+          </div>
+          <div class="topElement" v-if="classInput > 0">Subclass: 
+            <select v-model="subclassInput">
+              <option disabled value="">Subclass</option>
+              <option v-for="subClass in charOptions.subclasses.filter(subclassCheck)" :value="subClass.id">
+                {{ subClass.subclass_title }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <NrSelector :input="classLvlInput" v-if="classInput > 0"></NrSelector>
+
       </div>
     </div>
     
 
   </div>
-
-  <div class="abilityscoreContainer">
-    Strength: <div>12</div>
-    Dexterity: <div>12</div>
-    Constitution: <div>12</div>
-    Intelligence: <div>12</div>
-    Wisdom: <div>12</div>
-    Charisma: <div>12</div>
+  <div class="aScoreContainer">
+    <div class="aScoreElement">Strength: 
+      <NrSelector :input="strInput"></NrSelector>
+    </div>
+    <div class="aScoreElement">Dexterity: 
+      <NrSelector :input="dexInput"></NrSelector>
+    </div>
+    <div class="aScoreElement">Constitution: 
+      <NrSelector :input="conInput"></NrSelector>
+    </div>
+    <div class="aScoreElement">Intelligence: 
+      <NrSelector :input="intInput"></NrSelector>
+    </div>
+    <div class="aScoreElement">Wisdom: 
+      <NrSelector :input="wisInput"></NrSelector>
+    </div>
+    <div class="aScoreElement">Charisma: 
+      <NrSelector :input="chaInput"></NrSelector>
+    </div>
   </div>
 
-  <br><br><br><br><br><br>
-<button @click="charInsert">insert</button>
+<button class="genButton" @click="charInsert">Generate</button>
 </template>
 <script>
 import NrSelector from './nrSelector.vue';
@@ -48,26 +79,55 @@ export default {
       this.onWindowLoad();
     },
     components:{
-      //prop = input
-      //input should have value, minValue, maxValue
-      NrSelector
+      NrSelector //prop = input || input should have value, minValue, maxValue
     },
     data() {
       return {
         nameInput: "",
         raceInput: "",
+        bgInput: "",
         classInput: "",
         classLvlInput: {
           value: 1,
-          minValue: 0,
+          minValue: 1,
           maxValue: 20
         },
         subclassInput: "",
+        strInput: {
+          value: 10,
+          minValue: 8,
+          maxValue: 20
+        },
+        dexInput: {
+          value: 10,
+          minValue: 8,
+          maxValue: 20
+        },
+        conInput: {
+          value: 10,
+          minValue: 8,
+          maxValue: 20
+        },
+        intInput: {
+          value: 10,
+          minValue: 8,
+          maxValue: 20
+        },
+        wisInput: {
+          value: 10,
+          minValue: 8,
+          maxValue: 20
+        },
+        chaInput: {
+          value: 10,
+          minValue: 8,
+          maxValue: 20
+        },
         charOptions: {
           races: [],
           backgrounds: [],
           classes: [],
-          sublasses: []
+          subclasses: []
         }
       }
     },
@@ -93,22 +153,20 @@ export default {
             this.charOptions.races = data.slice(0, 49);
             this.charOptions.backgrounds = data.slice(49, 67);
             this.charOptions.classes = data.slice(67, 80);
-            this.charOptions.sublasses = data.slice(80, 199);
-            // console.log(this.charOptions.races, 
-            // this.charOptions.backgrounds, 
-            // this.charOptions.classes, 
-            // this.charOptions.sublasses)
+            this.charOptions.subclasses = data.slice(80, 199);
+            console.log(this.charOptions.races, 
+            this.charOptions.backgrounds, 
+            this.charOptions.classes, 
+            this.charOptions.subclasses)
           })
         },
-        // updateNr(data, changeValue){
-        //   this[data].value += changeValue;
-        //   if(this[data].value < this[data].minValue){
-        //     this[data].value = this[data].minValue
-        //   }
-        //   else if(this[data].value > this[data].maxValue){
-        //     this[data].value = this[data].maxValue
-        //   }
-        // },
+        subclassCheck(value, index, array){
+          // returns the subclasses that have a class id that is the same as the id of the chosen class
+          console.log(this.classInput, value.class_id);
+          if(this.classInput == value.class_id){
+            return value
+          }
+        },
         onWindowLoad(){
           console.log("window load event");
           this.fetchOptions();
@@ -117,6 +175,27 @@ export default {
   }
 </script>
 <style scoped>
+  input{
+    background-color: rgba(0, 0, 0, 0);
+    border-style: solid;
+    border-color: rgb(200, 200, 200);
+    color: rgb(200, 200, 200);
+  }
+  select{
+    display: flex;
+    height: fit-content;
+    width: 140px;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 4px;
+    border-style: solid;
+    border-color: rgb(200, 200, 200);
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(200, 200, 200);
+  }
+  option{
+    background-color: rgb(0, 0, 0);
+  }
   .topContainer{
     display: flex;
     flex-direction: row;
@@ -125,17 +204,42 @@ export default {
     border-style: none none solid none;
     border-color: rgb(200, 200, 200);
     padding: 8px;
+    margin-bottom: 24px;
   }
   .topElement{
     display: flex;
     flex-direction: row;
     height: min-content;
     justify-content: space-around;
-    align-items: center;
   }
-  select{
+  .classElement{
     display: flex;
-    height: fit-content;
+    flex-direction: column;
+    justify-content: center;
+    align-items: end;
+  }
+  .aScoreContainer{
+    display: flex;
+    flex-direction: column;
     margin: 8px;
+    min-width: 160px;
+    max-width: 214px;
+  }
+  .aScoreElement{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .genButton{
+    display: flex;
+    justify-self: end;
+    align-self: flex-end;
+    border-color: rgb(200, 200, 200);
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(200, 200, 200);
+    font-size: 24px;
+    padding: 8px;
   }
 </style>

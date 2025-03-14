@@ -40,5 +40,18 @@ export default{
     display: flex;
     flex-direction: column;
     text-align: center;
+    justify-content: space-between;
+    height: 2.8em;
+}
+button{
+    display: flex;
+    height: 1.5em;
+    width: 2em;
+    justify-content: center;
+    align-items: center;
+    border-color: rgb(200, 200, 200);
+    background-color: rgba(0, 0, 0, 0);
+    font-size: smaller;
+    color: rgb(200, 200, 200);
 }
 </style>

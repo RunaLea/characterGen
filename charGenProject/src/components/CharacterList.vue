@@ -40,8 +40,6 @@ export default {
     }}
 </script>
 <style scoped>
-/* Is used for spacing between the character properties & columns */
-
 /* Container that holds all characters */
 .charContainer{
   display: flex;
