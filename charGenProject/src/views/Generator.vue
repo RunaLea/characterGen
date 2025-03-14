@@ -25,7 +25,8 @@ export default{
     },
 }
 </script>
-<style>
+<style scoped>
+    /* Is used for spacing between the character properties & columns */
     .tab{
     display: inline-block;
     margin-left: 4em;
