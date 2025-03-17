@@ -1,75 +1,96 @@
 <template>
-  <div class="topContainer">
-    
-    <input class="topElement" type="text" v-model="nameInput" placeholder="Character name">
+  <div class="Container">
 
-    <div class="topElement" v-if="charOptions.races.length !== 0">Race: 
-      <select v-model="raceInput">
-        <option disabled value="">Select a Race</option>
-        <option v-for="race in charOptions.races" :value="race.id">
-        {{race.race_title}}
-        </option>
-    </select>
-    </div>
+    <div class="leftPart">
 
-    <div class="topElement" v-if="charOptions.backgrounds.length !== 0">Background: 
-      <select v-model="bgInput">
-        <option disabled value="">Select Background</option>
-        <option v-for="bg in charOptions.backgrounds" :value="bg.id">
-          {{bg.bg_title}}
-        </option>
-      </select>
-    </div>
+      <div class="topLeftPart">
+        <input class="topElement" type="text" v-model="nameInput" placeholder="Character name">
 
-    <div class="classContainer" v-if="charOptions.classes.length !== 0">
-      <div class="topElement" >
-        <div class="classElement">
-          <div class="topElement">Class: 
-            <select v-model="classInput">
-              <option disabled value="">Select a Class</option>
-              <option v-for="charClass in charOptions.classes" :value="charClass.id">
-                {{ charClass.class_title }}
-              </option>
-            </select>
-          </div>
-          <div class="topElement" v-if="classInput > 0">Subclass: 
-            <select v-model="subclassInput">
-              <option disabled value="">Subclass</option>
-              <option v-for="subClass in charOptions.subclasses.filter(subclassCheck)" :value="subClass.id">
-                {{ subClass.subclass_title }}
-              </option>
-            </select>
-          </div>
+        <div class="topElement" v-if="charOptions.races.length !== 0">Race: 
+          <select v-model="raceInput">
+            <option value="">None</option>
+            <option v-for="race in charOptions.races" :value="race.id" :key="race.id">
+            {{race.race_title}}
+            </option>
+          </select>
         </div>
-        <NrSelector :input="classLvlInput" v-if="classInput > 0"></NrSelector>
 
+        <div class="topElement" v-if="charOptions.backgrounds.length !== 0">Background: 
+          <select v-model="bgInput">
+            <option value="">None</option>
+            <option v-for="bg in charOptions.backgrounds" :value="bg.id" :key="bg.id">
+              {{bg.bg_title}}
+            </option>
+          </select>
+        </div>
       </div>
+
+      <div class="aScoreContainer">
+        <div class="aScoreElement">Strength: 
+          <NrSelector :input="strInput"></NrSelector>
+        </div>
+        <div class="aScoreElement">Dexterity: 
+          <NrSelector :input="dexInput"></NrSelector>
+        </div>
+        <div class="aScoreElement">Constitution: 
+          <NrSelector :input="conInput"></NrSelector>
+        </div>
+        <div class="aScoreElement">Intelligence: 
+          <NrSelector :input="intInput"></NrSelector>
+        </div>
+        <div class="aScoreElement">Wisdom: 
+          <NrSelector :input="wisInput"></NrSelector>
+        </div>
+        <div class="aScoreElement">Charisma: 
+          <NrSelector :input="chaInput"></NrSelector>
+        </div>
+      </div>
+      <!-- <div v-for="(ids, index) in classes.ids" :key="index">
+          {{ classes.ids[index] }}
+          {{ classes.lvls[index].value }}
+          {{ classes.subclasses[index] }}
+      </div> -->
+
     </div>
-    
+
+    <div class="rightPart">
+      <div class="topRightPart">
+        <div class="classContainer">
+          <div v-if="charOptions.classes.length !== 0" v-for="(ids, index) in classes.ids" :key="index">
+
+            <div class="topElement" >
+              <div class="classElement">
+                <div class="topElement">Class: 
+                  <select v-model="classes.ids[index]">
+                    <option value="">None</option>
+                    <option v-for="charClass in charOptions.classes" :value="charClass.id" :key="charClass.id">
+                      {{ charClass.class_title }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="topElement" v-if="classes.ids[index] > 0">Subclass: 
+                  <select v-model="classes.subclasses[index]">
+                    <option value="">None</option>
+                    <option v-for="charSubclass in charOptions.subclasses.filter(subclass => subclass.class_id === classes.ids[index])" :value="charSubclass.id" :key="charSubclass.id">
+                      {{ charSubclass.subclass_title }}
+                    </option>
+                  </select>
+                </div>
+
+              </div>
+
+              <NrSelector :input="classes.lvls[index]" v-if="classes.ids.length > 0" @click=""></NrSelector>
+            </div>
+          </div>
+          <button @click="addCharClass" class="classButton">+</button>
+        </div>
+      </div>
+      <button class="genButton" @click="charInsert">Generate</button>
+
+    </div>
 
   </div>
-  <div class="aScoreContainer">
-    <div class="aScoreElement">Strength: 
-      <NrSelector :input="strInput"></NrSelector>
-    </div>
-    <div class="aScoreElement">Dexterity: 
-      <NrSelector :input="dexInput"></NrSelector>
-    </div>
-    <div class="aScoreElement">Constitution: 
-      <NrSelector :input="conInput"></NrSelector>
-    </div>
-    <div class="aScoreElement">Intelligence: 
-      <NrSelector :input="intInput"></NrSelector>
-    </div>
-    <div class="aScoreElement">Wisdom: 
-      <NrSelector :input="wisInput"></NrSelector>
-    </div>
-    <div class="aScoreElement">Charisma: 
-      <NrSelector :input="chaInput"></NrSelector>
-    </div>
-  </div>
-
-<button class="genButton" @click="charInsert">Generate</button>
 </template>
 <script>
 import NrSelector from './nrSelector.vue';
@@ -86,41 +107,45 @@ export default {
         nameInput: "",
         raceInput: "",
         bgInput: "",
-        classInput: "",
+        classes: {
+          ids: [],
+          lvls: [],
+          subclasses: []
+        },
         classLvlInput: {
           value: 1,
           minValue: 1,
           maxValue: 20
         },
-        subclassInput: "",
+        charLvl: 1,
         strInput: {
           value: 10,
-          minValue: 8,
+          minValue: 0,
           maxValue: 20
         },
         dexInput: {
           value: 10,
-          minValue: 8,
+          minValue: 0,
           maxValue: 20
         },
         conInput: {
           value: 10,
-          minValue: 8,
+          minValue: 0,
           maxValue: 20
         },
         intInput: {
           value: 10,
-          minValue: 8,
+          minValue: 0,
           maxValue: 20
         },
         wisInput: {
           value: 10,
-          minValue: 8,
+          minValue: 0,
           maxValue: 20
         },
         chaInput: {
           value: 10,
-          minValue: 8,
+          minValue: 0,
           maxValue: 20
         },
         charOptions: {
@@ -131,19 +156,42 @@ export default {
         }
       }
     },
+    watch:{
+      classes: {
+          callUpdate(){
+            console.log("Classes changed:", this.classes);
+            this.updateLvl();
+          },
+          deep: true,
+          immediate: true
+        }
+      },
     methods: {
         //Inserts values into the characters table in the database
         charInsert(){
+          if(this.raceInput == 0 || this.bgInput == 0 || this.nameInput == ""){
+            alert("Please fill in all fields!")
+          }
+          else{
             fetch('http://localhost/characterGen_be/CharacterListInsert.php', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                char_name: this.characterName,
-                char_lvl: this.characterLvl
+                char_name: this.nameInput,
+                race_id:  this.raceInput,
+                bg_id: this.bgInput,
+                char_lvl: this.classLvlInput.value,
+                char_str: this.strInput.value,
+                char_dex: this.dexInput.value,
+                char_con: this.conInput.value,
+                char_int: this.intInput.value,
+                char_wis: this.wisInput.value,
+                char_cha: this.chaInput.value
               })
             })
+          }
         },
         fetchOptions(){
           fetch('http://localhost/characterGen_be/DataOptions.php')
@@ -154,22 +202,39 @@ export default {
             this.charOptions.backgrounds = data.slice(49, 67);
             this.charOptions.classes = data.slice(67, 80);
             this.charOptions.subclasses = data.slice(80, 199);
-            console.log(this.charOptions.races, 
-            this.charOptions.backgrounds, 
-            this.charOptions.classes, 
-            this.charOptions.subclasses)
+            // console.log(this.charOptions.races, 
+            // this.charOptions.backgrounds, 
+            // this.charOptions.classes, 
+            // this.charOptions.subclasses)
           })
         },
-        subclassCheck(value, index, array){
-          // returns the subclasses that have a class id that is the same as the id of the chosen class
-          console.log(this.classInput, value.class_id);
-          if(this.classInput == value.class_id){
-            return value
-          }
+        addCharClass(){
+          this.classes.ids.push(null);
+          this.classes.lvls.push({
+            value: this.classLvlInput.value,
+            minValue: this.classLvlInput.minValue,
+            maxValue: this.classLvlInput.maxValue
+          });
+          this.classes.subclasses.push(null);
+          this.updateLvl();
+          console.log(this.classes);
+        },
+        updateLvl(){
+          this.charLvl = this.classes.lvls.reduce((total, lvlObj) => {
+            if (lvlObj && typeof lvlObj.value === 'number') { // Check for undefined
+              return total + lvlObj.value;
+            } 
+            else {
+              console.error("Invalid level object:", lvlObj);
+              return total;
+            }
+          }, 0);
+          console.log("Character Level:", this.charLvl);
         },
         onWindowLoad(){
           console.log("window load event");
           this.fetchOptions();
+          this.addCharClass(); //adds a default character class option
         }
     }
   }
@@ -196,12 +261,43 @@ export default {
   option{
     background-color: rgb(0, 0, 0);
   }
-  .topContainer{
+  .Container{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: stretch;
+    padding: 8px;
+    margin-bottom: 24px;
+  }
+  .leftPart{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .rightPart{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .topLeftPart{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 760px;
+    border-style: none none solid none;
+    border-color: rgb(200, 200, 200);
+    padding: 8px;
+    margin-bottom: 24px;
+  }
+  .topRightPart{
+    justify-self: flex-end;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    border-style: none none solid none;
+    border-style: none none solid solid;
     border-color: rgb(200, 200, 200);
     padding: 8px;
     margin-bottom: 24px;
@@ -241,5 +337,23 @@ export default {
     color: rgb(200, 200, 200);
     font-size: 24px;
     padding: 8px;
+  }
+  .classButton{
+    display: flex;
+    justify-self: center;
+    margin: 8px;
+    border-color: rgb(200, 200, 200);
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 100%;
+    color: rgb(200, 200, 200);
+    height: 1.8em;
+    padding-top: 3px;
+  }
+  .classContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 20em;
+    align-items: center;
   }
 </style>
