@@ -25,6 +25,10 @@
         </div>
       </div>
 
+      <div class="boxElement">Proficiency <br> bonus:
+        <h3>+{{ profBonus }}</h3>
+      </div>
+
       <div class="aScoreContainer">
         <div class="aScoreElement">Strength: 
           <NrSelector :input="strInput"></NrSelector>
@@ -45,12 +49,6 @@
           <NrSelector :input="chaInput"></NrSelector>
         </div>
       </div>
-      <!-- <div v-for="(ids, index) in classes.ids" :key="index">
-          {{ classes.ids[index] }}
-          {{ classes.lvls[index].value }}
-          {{ classes.subclasses[index] }}
-      </div> -->
-
     </div>
 
     <div class="rightPart">
@@ -80,7 +78,7 @@
 
               </div>
 
-              <NrSelector :input="classes.lvls[index]" v-if="classes.ids.length > 0" @click=""></NrSelector>
+              <NrSelector :input="classes.lvls[index]" v-if="classes.ids.length > 0" @click="updateLvl()"></NrSelector>
             </div>
           </div>
           <button @click="addCharClass" class="classButton">+</button>
@@ -112,12 +110,12 @@ export default {
           lvls: [],
           subclasses: []
         },
-        classLvlInput: {
+        charLvl: {
           value: 1,
           minValue: 1,
           maxValue: 20
         },
-        charLvl: 1,
+        profBonus: 2,
         strInput: {
           value: 10,
           minValue: 0,
@@ -156,16 +154,7 @@ export default {
         }
       }
     },
-    watch:{
-      classes: {
-          callUpdate(){
-            console.log("Classes changed:", this.classes);
-            this.updateLvl();
-          },
-          deep: true,
-          immediate: true
-        }
-      },
+    watch:{},
     methods: {
         //Inserts values into the characters table in the database
         charInsert(){
@@ -182,7 +171,7 @@ export default {
                 char_name: this.nameInput,
                 race_id:  this.raceInput,
                 bg_id: this.bgInput,
-                char_lvl: this.classLvlInput.value,
+                char_lvl: this.charLvl.value,
                 char_str: this.strInput.value,
                 char_dex: this.dexInput.value,
                 char_con: this.conInput.value,
@@ -193,6 +182,7 @@ export default {
             })
           }
         },
+
         fetchOptions(){
           fetch('http://localhost/characterGen_be/DataOptions.php')
           .then(response => response.json())
@@ -208,19 +198,29 @@ export default {
             // this.charOptions.subclasses)
           })
         },
+
         addCharClass(){
-          this.classes.ids.push(null);
-          this.classes.lvls.push({
-            value: this.classLvlInput.value,
-            minValue: this.classLvlInput.minValue,
-            maxValue: this.classLvlInput.maxValue
-          });
-          this.classes.subclasses.push(null);
-          this.updateLvl();
-          console.log(this.classes);
+          // if the charLvl is below maxValue a new class will be added to the character
+          if(this.charLvl.value < this.charLvl.maxValue){
+            this.classes.ids.push(null);
+            this.classes.lvls.push({
+              value: 1,
+              minValue: 0,
+              maxValue: 20
+            });
+            this.classes.subclasses.push(null);
+            this.updateLvl();
+            console.log(this.classes);
+          }
+          else{
+            alert("Max level reached!");
+          }
         },
-        updateLvl(){
-          this.charLvl = this.classes.lvls.reduce((total, lvlObj) => {
+
+        updateLvl(){ 
+
+          // adds all class levels and changes the charLvl value to that value
+          this.charLvl.value = this.classes.lvls.reduce((total, lvlObj) => {
             if (lvlObj && typeof lvlObj.value === 'number') { // Check for undefined
               return total + lvlObj.value;
             } 
@@ -229,8 +229,23 @@ export default {
               return total;
             }
           }, 0);
-          console.log("Character Level:", this.charLvl);
+
+          // adjusts the charLvl to the minValue if it goes below the minValue
+          if (this.charLvl.value < this.charLvl.minValue){
+            this.classes.lvls[0].value = this.charLvl.minValue;
+            this.updateLvl()
+          }
+
+          // adjusts the maxValue of each classes.lvls so the character cannot go over the charLvl.maxvalue
+          this.classes.lvls.forEach(lvl => {
+            lvl.maxValue = this.charLvl.maxValue - (this.charLvl.value - lvl.value);
+          });
+          console.log("Character Level:", this.charLvl.value);
+
+          // updates the profBonus according to the charLvl
+          this.profBonus = Math.floor((this.charLvl.value -1) / 4) +2;
         },
+
         onWindowLoad(){
           console.log("window load event");
           this.fetchOptions();
@@ -282,21 +297,24 @@ export default {
   }
   .topLeftPart{
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
+    flex-grow: 7;
     justify-content: space-between;
-    width: 760px;
+    column-gap: 4.5em;
+    width: stretch;
     border-style: none none solid none;
     border-color: rgb(200, 200, 200);
     padding: 8px;
     margin-bottom: 24px;
   }
   .topRightPart{
-    justify-self: flex-end;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    flex-grow: 1;
     border-style: none none solid solid;
     border-color: rgb(200, 200, 200);
     padding: 8px;
@@ -352,8 +370,20 @@ export default {
   .classContainer{
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    row-gap: 0.5rem;
     width: 20em;
     align-items: center;
+  }
+  .boxElement{
+    font-size: 8pt;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    text-align: center;
+    border: solid rgb(200, 200, 200);
+    padding: 4px;
+  }
+  h3{
+    font-size: 16pt;
   }
 </style>
