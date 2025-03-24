@@ -84,7 +84,7 @@
           <button @click="addCharClass" class="classButton">+</button>
         </div>
       </div>
-      <button class="genButton" @click="charInsert">Generate</button>
+      <button class="genButton" @click="charInsert()">Generate</button>
 
     </div>
 
@@ -102,6 +102,9 @@ export default {
     },
     data() {
       return {
+        characters: [],
+        characterIds: [],
+        charIdInput: 0,
         nameInput: "",
         raceInput: "",
         bgInput: "",
@@ -156,12 +159,18 @@ export default {
     },
     watch:{},
     methods: {
-        //Inserts values into the characters table in the database
+        // Inserts values into the characters table in the database
         charInsert(){
-          if(this.raceInput == 0 || this.bgInput == 0 || this.nameInput == ""){
+          if(this.raceInput == 0 || 
+          this.bgInput == 0 || 
+          this.nameInput == "" || 
+          this.classes.ids.length == 0 || 
+          this.classes.lvls.length == 0 || 
+          this.classes.subclasses.length == 0){
             alert("Please fill in all fields!")
           }
           else{
+            console.log("Character insert")
             fetch('http://localhost/characterGen_be/CharacterListInsert.php', {
             method: "POST",
             headers: {
@@ -172,6 +181,7 @@ export default {
                 race_id:  this.raceInput,
                 bg_id: this.bgInput,
                 char_lvl: this.charLvl.value,
+                prof_bonus: this.profBonus,
                 char_str: this.strInput.value,
                 char_dex: this.dexInput.value,
                 char_con: this.conInput.value,
@@ -180,9 +190,34 @@ export default {
                 char_cha: this.chaInput.value
               })
             })
+            .then(this.fetchCharacters())
+            // this.fetchCharacters()
           }
         },
-
+        charClassesInsert(){
+          // Inserts values into the char_classes table in the database
+          if(this.classes.ids.length == 0 || this.classes.lvls.length == 0 || this.classes.subclasses.length == 0){
+            alert("Please fill in all fields!")
+          }
+          else{
+            this.classes.ids.forEach(element => {
+              console.log("Class insert");
+              var index = this.classes.ids.indexOf(element);
+              fetch('http://localhost/characterGen_be/charClassesInsert.php', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                char_id: this.charIdInput,
+                class_id: this.classes.ids[index],
+                class_lvl: this.classes.lvls[index].value,
+                subclass_id: this.classes.subclasses[index]
+              })
+            })
+            })
+          }
+        },
         fetchOptions(){
           fetch('http://localhost/characterGen_be/DataOptions.php')
           .then(response => response.json())
@@ -191,14 +226,44 @@ export default {
             this.charOptions.races = data.slice(0, 49);
             this.charOptions.backgrounds = data.slice(49, 67);
             this.charOptions.classes = data.slice(67, 80);
-            this.charOptions.subclasses = data.slice(80, 199);
+            this.charOptions.subclasses = data.slice(80, 198);
             // console.log(this.charOptions.races, 
             // this.charOptions.backgrounds, 
             // this.charOptions.classes, 
             // this.charOptions.subclasses)
           })
         },
-
+        fetchCharacters(){
+          fetch('http://localhost/characterGen_be/CharacterList.php')
+          .then(response => response.json())
+          .then(data => {
+            this.characters = data
+            console.log("character fetch", this.characters)
+            this.characters.forEach( character => {
+              this.characterIds.push(parseInt(character.id))
+            })
+            console.log("IDs: ", this.characterIds)
+            this.pickNextId()
+          })
+        },
+        pickNextId(){
+          // Picks the next ID for the character
+          if(this.characterIds.length == 0){
+            alert("ID pick failed");
+          }
+          else if(this.characterIds.length == 1){
+            console.log(`One character ID detected: ${this.characterIds[0]}`);
+            this.charIdInput = this.characterIds[0];
+            console.log(`New character ID: ${this.charIdInput}`);
+            this.charClassesInsert();
+          }
+          else{
+            console.log(`Multiple character IDs detected: ${this.characterIds}`);
+            this.charIdInput = this.characterIds.reduce((a, b) => Math.max(a, b), - Infinity);
+            console.log(`New character ID: ${this.charIdInput}`);
+            this.charClassesInsert();
+          }
+        },
         addCharClass(){
           // if the charLvl is below maxValue a new class will be added to the character
           if(this.charLvl.value < this.charLvl.maxValue){
