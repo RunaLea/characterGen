@@ -190,8 +190,22 @@ export default {
                 char_cha: this.chaInput.value
               })
             })
-            .then(this.fetchCharacters())
-            // this.fetchCharacters()
+            .then(response => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+            })
+            .then(text => {
+              if (text.includes("New record created successfully")) {
+                this.fetchCharacters();
+              } else {
+                console.error("Error inserting character:", text);
+              }
+            })
+            .catch(error => {
+              console.error("Error inserting character:", error);
+            })
           }
         },
         charClassesInsert(){
@@ -201,6 +215,7 @@ export default {
           }
           else{
             this.classes.ids.forEach(element => {
+              console.log(this.classes.ids);
               console.log("Class insert");
               var index = this.classes.ids.indexOf(element);
               fetch('http://localhost/characterGen_be/charClassesInsert.php', {
