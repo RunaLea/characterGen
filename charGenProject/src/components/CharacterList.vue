@@ -1,14 +1,14 @@
 <template>
-<div class="columnContainer">
-  <div class="columnElem">Name</div><span class="tab"></span>
-  <div class="columnElem">Level</div><span class="tab"></span>
-  <div class="columnElem">Race</div><span class="tab"></span>
+<div class="row-space-around pb-2 font-bold">
+  <div class="column-elem ">Name</div>
+  <div class="column-elem">Level</div>
+  <div class="column-elem">Race</div>
 </div>
 <!-- Makes a !!constant!! for every character in characters and adds the name, lvl and race to the list.-->
-<div v-if="characters.length !== 0" v-for="character in characters" :key="character.id" class="charContainer">
-  <div class="charElem">{{ character.char_name }}</div><span class="tab"></span> 
-  <div class="charElem">{{ character.char_lvl }}</div><span class="tab"></span>
-  <div class="charElem">{{ character.race_title }}</div><span class="tab"></span>
+<div v-if="characters.length !== 0" v-for="character in characters" :key="character.id" class="row-space-around">
+  <div class="column-elem">{{ character.char_name }}</div>
+  <div class="column-elem">{{ character.char_lvl }}</div>
+  <div class="column-elem">{{ character.race_title }}</div>
 </div>
 <!-- <br><button @click="fetchCharacters">Load</button> -->
 </template>
