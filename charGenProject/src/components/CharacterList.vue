@@ -39,7 +39,7 @@ export default {
         }
     }}
 </script>
-<style scoped>
+<!-- <style scoped>
 /* Container that holds all characters */
 .charContainer{
   display: flex;
@@ -60,4 +60,4 @@ export default {
  width: 1em;
  color: white;
 }
-</style>
+</style> -->

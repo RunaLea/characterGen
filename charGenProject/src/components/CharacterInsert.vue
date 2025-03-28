@@ -160,6 +160,7 @@ export default {
     watch:{},
     methods: {
         // Inserts values into the characters table in the database
+        // check of als de velden leeg zijn een aparte functie maken
         charInsert(){
           if(this.raceInput == 0 || 
           this.bgInput == 0 || 
@@ -208,6 +209,7 @@ export default {
             })
           }
         },
+
         charClassesInsert(){
           // Inserts values into the char_classes table in the database
           if(this.classes.ids.length == 0 || this.classes.lvls.length == 0 || this.classes.subclasses.length == 0){
@@ -233,6 +235,7 @@ export default {
             })
           }
         },
+
         fetchOptions(){
           fetch('http://localhost/characterGen_be/DataOptions.php')
           .then(response => response.json())
@@ -242,12 +245,9 @@ export default {
             this.charOptions.backgrounds = data.slice(49, 67);
             this.charOptions.classes = data.slice(67, 80);
             this.charOptions.subclasses = data.slice(80, 198);
-            // console.log(this.charOptions.races, 
-            // this.charOptions.backgrounds, 
-            // this.charOptions.classes, 
-            // this.charOptions.subclasses)
           })
         },
+
         fetchCharacters(){
           fetch('http://localhost/characterGen_be/CharacterList.php')
           .then(response => response.json())
@@ -261,7 +261,9 @@ export default {
             this.pickNextId()
           })
         },
+
         pickNextId(){
+          // na de if statement een return en dan gewoon een nieuwe if statement ipv if else /else
           // Picks the next ID for the character
           if(this.characterIds.length == 0){
             alert("ID pick failed");
@@ -279,6 +281,7 @@ export default {
             this.charClassesInsert();
           }
         },
+
         addCharClass(){
           // if the charLvl is below maxValue a new class will be added to the character
           if(this.charLvl.value < this.charLvl.maxValue){
@@ -320,7 +323,7 @@ export default {
           this.classes.lvls.forEach(lvl => {
             lvl.maxValue = this.charLvl.maxValue - (this.charLvl.value - lvl.value);
           });
-          console.log("Character Level:", this.charLvl.value);
+          // console.log("Character Level:", this.charLvl.value);
 
           // updates the profBonus according to the charLvl
           this.profBonus = Math.floor((this.charLvl.value -1) / 4) +2;
@@ -334,7 +337,7 @@ export default {
     }
   }
 </script>
-<style scoped>
+<!-- <style scoped>
   input{
     background-color: rgba(0, 0, 0, 0);
     border-style: solid;
@@ -466,4 +469,4 @@ export default {
   h3{
     font-size: 16pt;
   }
-</style>
+</style> -->

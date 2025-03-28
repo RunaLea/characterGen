@@ -15,11 +15,13 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.0.17",
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.13.4",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "npm-run-all2": "^7.0.2",
+    "tailwindcss": "^4.0.17",
     "typescript": "~5.7.3",
     "vite": "^6.1.0",
     "vite-plugin-vue-devtools": "^7.7.2",

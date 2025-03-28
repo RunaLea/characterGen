@@ -1,17 +1,20 @@
 <template>
-    <div class="header">
-        <h1>Tabletop Character Generator</h1>
+    <div class=" -z-1 position: fixed h-screen w-screen left-0 top-0 bg-black"></div>
+    <div class="flex justify-center">
+        <h1 class="text-xl font-medium text-white">Tabletop Character Generator</h1>
     </div>
-    <div class="content">
-        <div class="sidebarLeft">
-            <h2>Characters</h2> 
-            <CharacterList/>
-        </div>
-        <div class="charGenContainer">
-            <h2>New Character</h2>
-            <CharacterInsert/>
-        </div>
-        <div class="sidebarRight">
+    <div class="text-white">
+        <div class="flex flex-row items-center justify-center">
+            <div class="columns-1">
+                <h2>Characters</h2> 
+                <CharacterList/>
+            </div>
+            <div class="columns-1">
+                <h2>New Character</h2>
+                <CharacterInsert/>
+            </div>
+            <div class="columns-1">
+            </div>
         </div>
     </div>
 </template>
@@ -25,7 +28,7 @@ export default{
     },
 }
 </script>
-<style>
+<!-- <style>
     /* Is used for spacing between the character properties & columns */
     .tab{
     display: inline-block;
@@ -87,4 +90,4 @@ export default{
         padding-right: 4px;
         color: rgb(200, 200, 200);
     }
-</style>
+</style> -->
