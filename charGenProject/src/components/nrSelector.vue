@@ -1,7 +1,7 @@
 <template>
-    <div class="nrSelector">
-        <div>{{input.value}}</div>
-        <div v-if="this.input" class="buttonContainer">
+    <div class="nr-selector">
+        <div class="mx-2">{{input.value}}</div>
+        <div v-if="this.input" class="ml-1">
         <button @click="updateNr(1)">ᐃ</button>
         <button @click="updateNr(-1)">ᐁ</button>
     </div>

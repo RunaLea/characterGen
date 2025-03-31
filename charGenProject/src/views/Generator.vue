@@ -6,20 +6,20 @@
     <div class="">
         <div class="row-center">
             <div class="columns-lg md:columns-xs lg:columns-md 2xl:columns-sm">
-                <div class=" card bg-light dark:bg-mid text-dark dark:text-light md:h-240">
+                <div class=" card bg-light dark:bg-mid text-dark dark:text-light md:h-212">
                     <h2 class="header mb-1.5">Characters</h2> 
                     <CharacterList/>
                 </div>
                 
             </div>
             <div class=" columns-lg md:columns-md lg:columns-xl 2xl:columns-3xl">
-                <div class=" card bg-light dark:bg-mid text-dark dark:text-light md:h-240">
+                <div class=" card bg-light dark:bg-mid text-dark dark:text-light md:h-212">
                     <h2 class="header mb-1.5">New Character</h2>
                     <CharacterInsert/>
                 </div>
             </div>
             <div class="columns-lg md:columns-3xl lg:columns-5xl 2xl:columns-sm">
-                <div class=" card bg-light dark:bg-mid text-dark dark:text-light 2xl:h-240">
+                <div class=" card bg-light dark:bg-mid text-dark dark:text-light 2xl:h-216">
 
                 </div>
             </div>

@@ -1,12 +1,12 @@
 <template>
-  <div class="Container">
+  <div class="flex flex-row w-xs md:w-sm lg:w-lg 2xl:w-2xl  justify-between">
 
-    <div class="leftPart">
+    <div class="flex flex-col justify-items-start">
 
-      <div class="topLeftPart">
-        <input class="topElement" type="text" v-model="nameInput" placeholder="Character name">
+      <div class="flex flex-row flex-wrap gap-x-[12%]">
+        <input class="column-elem" type="text" v-model="nameInput" placeholder="Name">
 
-        <div class="topElement" v-if="charOptions.races.length !== 0">Race: 
+        <div class="column-elem" v-if="charOptions.races.length !== 0">Race: 
           <select v-model="raceInput">
             <option value="">None</option>
             <option v-for="race in charOptions.races" :value="race.id" :key="race.id">
@@ -15,7 +15,7 @@
           </select>
         </div>
 
-        <div class="topElement" v-if="charOptions.backgrounds.length !== 0">Background: 
+        <div class="column-elem" v-if="charOptions.backgrounds.length !== 0">Background: 
           <select v-model="bgInput">
             <option value="">None</option>
             <option v-for="bg in charOptions.backgrounds" :value="bg.id" :key="bg.id">
@@ -25,40 +25,40 @@
         </div>
       </div>
 
-      <div class="boxElement">Proficiency <br> bonus:
+      <div class="box-elem">Proficiency <br> bonus:
         <h3>+{{ profBonus }}</h3>
       </div>
 
-      <div class="aScoreContainer">
-        <div class="aScoreElement">Strength: 
+      <div class="flex flex-col w-48 mt-2 gap-y-[2%]">
+        <div class="flex flex-row justify-between items-center">Strength: 
           <NrSelector :input="strInput"></NrSelector>
         </div>
-        <div class="aScoreElement">Dexterity: 
+        <div class="flex flex-row justify-between items-center">Dexterity: 
           <NrSelector :input="dexInput"></NrSelector>
         </div>
-        <div class="aScoreElement">Constitution: 
+        <div class="flex flex-row justify-between items-center">Constitution: 
           <NrSelector :input="conInput"></NrSelector>
         </div>
-        <div class="aScoreElement">Intelligence: 
+        <div class="flex flex-row justify-between items-center">Intelligence: 
           <NrSelector :input="intInput"></NrSelector>
         </div>
-        <div class="aScoreElement">Wisdom: 
+        <div class="flex flex-row justify-between items-center">Wisdom: 
           <NrSelector :input="wisInput"></NrSelector>
         </div>
-        <div class="aScoreElement">Charisma: 
+        <div class="flex flex-row justify-between items-center">Charisma: 
           <NrSelector :input="chaInput"></NrSelector>
         </div>
       </div>
     </div>
 
-    <div class="rightPart">
-      <div class="topRightPart">
-        <div class="classContainer">
+    <div class="flex flex-col justify-between items-center">
+      <div class="">
+        <div class="flex flex-col items-between">
           <div v-if="charOptions.classes.length !== 0" v-for="(ids, index) in classes.ids" :key="index">
 
-            <div class="topElement" >
-              <div class="classElement">
-                <div class="topElement">Class: 
+            <div class="flex flex-row flex-wrap mb-6 items-start" >
+              <div class="flex flex-col w-[100%] lg:w-[50%] 2xl:w-[60%]">
+                <div class="flex flex-row flex-wrap justify-between">Class: 
                   <select v-model="classes.ids[index]">
                     <option value="">None</option>
                     <option v-for="charClass in charOptions.classes" :value="charClass.id" :key="charClass.id">
@@ -67,7 +67,7 @@
                   </select>
                 </div>
 
-                <div class="topElement" v-if="classes.ids[index] > 0">Subclass: 
+                <div class="flex flex-row flex-wrap justify-between" v-if="classes.ids[index] > 0">Subclass: 
                   <select v-model="classes.subclasses[index]">
                     <option value="">None</option>
                     <option v-for="charSubclass in charOptions.subclasses.filter(subclass => subclass.class_id === classes.ids[index])" :value="charSubclass.id" :key="charSubclass.id">
@@ -81,10 +81,10 @@
               <NrSelector :input="classes.lvls[index]" v-if="classes.ids.length > 0" @click="updateLvl()"></NrSelector>
             </div>
           </div>
-          <button @click="addCharClass" class="classButton">+</button>
+          <button @click="addCharClass" class="rounded-[100%] w-6 text-center self-center pb-0.5">+</button>
         </div>
       </div>
-      <button class="genButton" @click="charInsert()">Generate</button>
+      <button class="w-fit p-2" @click="charInsert()">Generate</button>
 
     </div>
 
