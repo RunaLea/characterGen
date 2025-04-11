@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-row w-xs md:w-sm lg:w-lg 2xl:w-2xl  justify-between">
+  <div class="flex flex-row w-xs xs:w-md md:w-sm lg:w-lg 2xl:w-2xl  justify-between">
 
     <div class="flex flex-col justify-items-start">
 
-      <div class="flex flex-row flex-wrap gap-x-[12%]">
-        <input class="column-elem" type="text" v-model="nameInput" placeholder="Name">
+      <div class="flex flex-row flex-wrap gap-x-[16%]">
+        <input class="column-elem w-[25%] -mr-6 lg:w-20 lg:-mr-8 2xl:w-30 2xl:-mr-12" type="text" v-model="nameInput" placeholder="Name">
 
-        <div class="column-elem" v-if="charOptions.races.length !== 0">Race: 
+        <div class="column-elem w-[20%]" v-if="charOptions.races.length !== 0">Race: 
           <select v-model="raceInput">
             <option value="">None</option>
             <option v-for="race in charOptions.races" :value="race.id" :key="race.id">
@@ -15,7 +15,7 @@
           </select>
         </div>
 
-        <div class="column-elem" v-if="charOptions.backgrounds.length !== 0">Background: 
+        <div class="column-elem w-[20%]" v-if="charOptions.backgrounds.length !== 0">Background: 
           <select v-model="bgInput">
             <option value="">None</option>
             <option v-for="bg in charOptions.backgrounds" :value="bg.id" :key="bg.id">
@@ -51,14 +51,14 @@
       </div>
     </div>
 
-    <div class="flex flex-col justify-between items-center">
+    <div class="flex flex-col justify-between items-center w-60">
       <div class="">
         <div class="flex flex-col items-between">
           <div v-if="charOptions.classes.length !== 0" v-for="(ids, index) in classes.ids" :key="index">
 
-            <div class="flex flex-row flex-wrap mb-6 items-start" >
-              <div class="flex flex-col w-[100%] lg:w-[50%] 2xl:w-[60%]">
-                <div class="flex flex-row flex-wrap justify-between">Class: 
+            <div class="flex flex-row flex-wrap mb-6 items-start justify-center">
+              <div class="flex flex-col w-[50%] lg:w-[60%] 2xl:w-[65%]">
+                <div class="flex flex-row flex-wrap justify-between column-elem">Class: 
                   <select v-model="classes.ids[index]">
                     <option value="">None</option>
                     <option v-for="charClass in charOptions.classes" :value="charClass.id" :key="charClass.id">
@@ -67,7 +67,7 @@
                   </select>
                 </div>
 
-                <div class="flex flex-row flex-wrap justify-between" v-if="classes.ids[index] > 0">Subclass: 
+                <div class="flex flex-row flex-wrap justify-between column-elem w-[160%] md:w-[180%] lg:w-[140%] 2xl:w-[130%]" v-if="classes.ids[index] > 0">Subclass: 
                   <select v-model="classes.subclasses[index]">
                     <option value="">None</option>
                     <option v-for="charSubclass in charOptions.subclasses.filter(subclass => subclass.class_id === classes.ids[index])" :value="charSubclass.id" :key="charSubclass.id">
@@ -81,10 +81,10 @@
               <NrSelector :input="classes.lvls[index]" v-if="classes.ids.length > 0" @click="updateLvl()"></NrSelector>
             </div>
           </div>
-          <button @click="addCharClass" class="rounded-[100%] w-6 text-center self-center pb-0.5">+</button>
+          <button @click="addCharClass" class="rounded-[100%] w-6.5 text-center self-center pb-0.4 pt-0.4 text-base">+</button>
         </div>
       </div>
-      <button class="w-fit p-2" @click="charInsert()">Generate</button>
+      <button class="w-fit md:w-fit px-3 py-1 rounded-full dark:text-light text-[10px] lg:text-xs 2xl:text-base" @click="charInsert()">✦ Generate ✦</button>
 
     </div>
 
@@ -302,7 +302,7 @@ export default {
 
         updateLvl(){ 
 
-          // adds all class levels and changes the charLvl value to that value
+          // adds all class levels and changes the charLvl value to that value ---CHANGE INTO COMPUTED PROPERTY
           this.charLvl.value = this.classes.lvls.reduce((total, lvlObj) => {
             if (lvlObj && typeof lvlObj.value === 'number') { // Check for undefined
               return total + lvlObj.value;
@@ -325,7 +325,7 @@ export default {
           });
           // console.log("Character Level:", this.charLvl.value);
 
-          // updates the profBonus according to the charLvl
+          // updates the profBonus according to the charLvl ---CHANGE INTO COMPUTED PROPERTY
           this.profBonus = Math.floor((this.charLvl.value -1) / 4) +2;
         },
 

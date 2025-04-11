@@ -1,26 +1,33 @@
 @import 'tailwindcss';
 
-:root{
-    --color-dark: #1b1b21;
-    --color-mid: #58586e;
-    --color-light: #cec8d6;
-}
-
 @layer base{
     h1{
-        font-size: var(--text-2xl);
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size: var(--text-lg);
         font-weight: 700;
         padding-left: 2px;
         padding-right: 2px;
     }
 
     h2{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         font-size: var(--text-xl);
-        font-weight: 500;
+        font-weight: 600;
     }
 
     h3{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         font-size: var(--text-xl);
+        font-weight: 600;
+    }
+
+    body{
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
+    ::selection {
+            background-color: var(--color-mid-trans);
+            color: var(--color-highlight);
     }
 
     input{
@@ -33,10 +40,22 @@
     }
 
     select{
+        scrollbar-width: none;
+        -ms-overflow-style: none;
         border: 1px solid;
         border-radius: 4px;
-        width: 130%;
         font-size: var(--text-xs);
+        accent-color: var(--color-mid);
+        width: 130%;
+    }
+
+    select::-webkit-scrollbar {
+        width: 0;
+    }
+
+    option{
+        background-color: var(--color-dark);
+        accent-color: var(--color-mid);
     }
 
     button{
@@ -46,10 +65,14 @@
 }
 
 @theme {
-    --color-*: initial;
-    --color-dark: #1b1b21;
-    --color-mid: #58586e;
-    --color-light: #e8d8da;
+    --color-dark: #030314;
+    --color-mid: #30005e;
+    --color-highlight: #5900ff;
+    --color-mid-trans: rgba(49, 0, 94, 0.2);
+    --color-light: #fbf7ff;
+    --color-light-trans: rgba(251, 247, 255, 0.8);
+
+    --breakpoint-xs: 30rem;
 }
 
 @layer components{
@@ -60,6 +83,7 @@
     .background{
         z-index: -1;
         position: fixed;
+        background-image: radial-gradient(#030314,#09001a, #180044);
         background-size: cover;
         height: 100vh;
         width: 100vw;
@@ -67,6 +91,7 @@
 
     .card{
         width: inherit;
+        border: solid 1px var(--color-light);
         margin: 0.5em;
         border-radius: 8px;
         padding: 0.5em 1em 1em 1em;
@@ -89,7 +114,6 @@
 
     .column-elem{
         font-size: 8pt;
-        width: 20%;
     }
 
     .box-elem{
