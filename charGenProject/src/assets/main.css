@@ -83,7 +83,7 @@
     .background{
         z-index: -1;
         position: fixed;
-        background-image: radial-gradient(#030314,#09001a, #180044);
+        background-image: radial-gradient(#03030e,#05020a, #0c0024);
         background-size: cover;
         height: 100vh;
         width: 100vw;

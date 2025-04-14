@@ -118,7 +118,7 @@ export default {
           minValue: 1,
           maxValue: 20
         },
-        profBonus: 2,
+        // profBonus: 2,
         strInput: {
           value: 10,
           minValue: 0,
@@ -157,6 +157,13 @@ export default {
         }
       }
     },
+    computed: {
+      profBonus(){
+        return Math.floor((this.charLvl.value -1) / 4) +2
+      },
+
+      
+    },
     watch:{},
     methods: {
         // Inserts values into the characters table in the database
@@ -182,7 +189,6 @@ export default {
                 race_id:  this.raceInput,
                 bg_id: this.bgInput,
                 char_lvl: this.charLvl.value,
-                prof_bonus: this.profBonus,
                 char_str: this.strInput.value,
                 char_dex: this.dexInput.value,
                 char_con: this.conInput.value,
@@ -253,10 +259,33 @@ export default {
           .then(response => response.json())
           .then(data => {
             this.characters = data
-            console.log("character fetch", this.characters)
-            this.characters.forEach( character => {
+            let charChecklist = [];
+            this.characters.forEach((character, index) => {
               this.characterIds.push(parseInt(character.id))
-            })
+              if(charChecklist.includes(character.id)){
+                console.log("double found", index)
+
+                let firstIndex = charChecklist.indexOf(character.id);
+                let classLvl = this.characters[firstIndex].class_lvl;
+                let classTitle = this.characters[firstIndex].class_title;
+                let subclassTitle = this.characters[firstIndex].subclass_title;
+
+                // changes the respective data to arrays
+                this.characters[firstIndex].class_lvl = [classLvl];
+                this.characters[firstIndex].class_title = [classTitle];
+                this.characters[firstIndex].subclass_title = [subclassTitle];
+
+                // pushes the new data into the arrays
+                this.characters[firstIndex].class_lvl.push(character.class_lvl);
+                this.characters[firstIndex].class_title.push(character.class_title);
+                this.characters[firstIndex].subclass_title.push(character.subclass_title);
+
+                this.characters.splice(index, 1)
+              }
+              else{
+                charChecklist.push(character.id)
+              }})
+            console.log("character fetch", this.characters)
             console.log("IDs: ", this.characterIds)
             this.pickNextId()
           })
@@ -302,7 +331,7 @@ export default {
 
         updateLvl(){ 
 
-          // adds all class levels and changes the charLvl value to that value ---CHANGE INTO COMPUTED PROPERTY
+          // adds all class levels and changes the charLvl value to that value 
           this.charLvl.value = this.classes.lvls.reduce((total, lvlObj) => {
             if (lvlObj && typeof lvlObj.value === 'number') { // Check for undefined
               return total + lvlObj.value;
@@ -323,10 +352,6 @@ export default {
           this.classes.lvls.forEach(lvl => {
             lvl.maxValue = this.charLvl.maxValue - (this.charLvl.value - lvl.value);
           });
-          // console.log("Character Level:", this.charLvl.value);
-
-          // updates the profBonus according to the charLvl ---CHANGE INTO COMPUTED PROPERTY
-          this.profBonus = Math.floor((this.charLvl.value -1) / 4) +2;
         },
 
         onWindowLoad(){
@@ -337,136 +362,3 @@ export default {
     }
   }
 </script>
-<!-- <style scoped>
-  input{
-    background-color: rgba(0, 0, 0, 0);
-    border-style: solid;
-    border-color: rgb(200, 200, 200);
-    color: rgb(200, 200, 200);
-  }
-  select{
-    display: flex;
-    height: fit-content;
-    width: 140px;
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 4px;
-    border-style: solid;
-    border-color: rgb(200, 200, 200);
-    background-color: rgba(0, 0, 0, 0);
-    color: rgb(200, 200, 200);
-  }
-  option{
-    background-color: rgb(0, 0, 0);
-  }
-  .Container{
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-    width: stretch;
-    padding: 8px;
-    margin-bottom: 24px;
-  }
-  .leftPart{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .rightPart{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .topLeftPart{
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
-    flex-grow: 7;
-    justify-content: space-between;
-    column-gap: 4.5em;
-    width: stretch;
-    border-style: none none solid none;
-    border-color: rgb(200, 200, 200);
-    padding: 8px;
-    margin-bottom: 24px;
-  }
-  .topRightPart{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    flex-grow: 1;
-    border-style: none none solid solid;
-    border-color: rgb(200, 200, 200);
-    padding: 8px;
-    margin-bottom: 24px;
-  }
-  .topElement{
-    display: flex;
-    flex-direction: row;
-    height: min-content;
-    justify-content: space-around;
-  }
-  .classElement{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: end;
-  }
-  .aScoreContainer{
-    display: flex;
-    flex-direction: column;
-    margin: 8px;
-    min-width: 160px;
-    max-width: 214px;
-  }
-  .aScoreElement{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 4px;
-  }
-  .genButton{
-    display: flex;
-    justify-self: end;
-    align-self: flex-end;
-    border-color: rgb(200, 200, 200);
-    background-color: rgba(0, 0, 0, 0);
-    color: rgb(200, 200, 200);
-    font-size: 24px;
-    padding: 8px;
-  }
-  .classButton{
-    display: flex;
-    justify-self: center;
-    margin: 8px;
-    border-color: rgb(200, 200, 200);
-    background-color: rgba(0, 0, 0, 0);
-    border-radius: 100%;
-    color: rgb(200, 200, 200);
-    height: 1.8em;
-    padding-top: 3px;
-  }
-  .classContainer{
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.5rem;
-    width: 20em;
-    align-items: center;
-  }
-  .boxElement{
-    font-size: 8pt;
-    display: flex;
-    flex-direction: column;
-    width: fit-content;
-    text-align: center;
-    border: solid rgb(200, 200, 200);
-    padding: 4px;
-  }
-  h3{
-    font-size: 16pt;
-  }
-</style> -->
