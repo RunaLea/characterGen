@@ -30,23 +30,35 @@
       </div>
 
       <div class="flex flex-col w-48 mt-2 gap-y-[2%]">
-        <div class="flex flex-row justify-between items-center">Strength: 
-          <NrSelector :input="strInput"></NrSelector>
+        <div class="flex flex-row justify-between items-center">
+          <p class="w-20">Strength:</p> 
+          <NrSelector :input="strInput" class="w-14"></NrSelector>
+          <p class="w-5">{{ abilityModifier(strInput) }}</p>
         </div>
-        <div class="flex flex-row justify-between items-center">Dexterity: 
-          <NrSelector :input="dexInput"></NrSelector>
+        <div class="flex flex-row justify-between items-center">
+          <p class="w-20">Dexterity:</p> 
+          <NrSelector :input="dexInput" class="w-14"></NrSelector>
+          <p class="w-5">{{ abilityModifier(dexInput) }}</p>
         </div>
-        <div class="flex flex-row justify-between items-center">Constitution: 
-          <NrSelector :input="conInput"></NrSelector>
+        <div class="flex flex-row justify-between items-center">
+          <p class="w-20">Constitution:</p> 
+          <NrSelector :input="conInput" class="w-14"></NrSelector>
+          <p class="w-5">{{ abilityModifier(conInput) }}</p>
         </div>
-        <div class="flex flex-row justify-between items-center">Intelligence: 
-          <NrSelector :input="intInput"></NrSelector>
+        <div class="flex flex-row justify-between items-center">
+          <p class="w-20">Intelligence:</p> 
+          <NrSelector :input="intInput" class="w-14"></NrSelector>
+          <p class="w-5">{{ abilityModifier(intInput) }}</p>
         </div>
-        <div class="flex flex-row justify-between items-center">Wisdom: 
-          <NrSelector :input="wisInput"></NrSelector>
+        <div class="flex flex-row justify-between items-center">
+          <p class="w-20">Wisdom:</p> 
+          <NrSelector :input="wisInput" class="w-14"></NrSelector>
+          <p class="w-5">{{ abilityModifier(wisInput) }}</p>
         </div>
-        <div class="flex flex-row justify-between items-center">Charisma: 
-          <NrSelector :input="chaInput"></NrSelector>
+        <div class="flex flex-row justify-between items-center">
+          <p class="w-20">Charisma:</p> 
+          <NrSelector :input="chaInput" class="w-14"></NrSelector>
+          <p class="w-5">{{ abilityModifier(chaInput) }}</p>
         </div>
       </div>
     </div>
@@ -118,35 +130,34 @@ export default {
           minValue: 1,
           maxValue: 20
         },
-        // profBonus: 2,
         strInput: {
           value: 10,
-          minValue: 0,
+          minValue: 1,
           maxValue: 20
         },
         dexInput: {
           value: 10,
-          minValue: 0,
+          minValue: 1,
           maxValue: 20
         },
         conInput: {
           value: 10,
-          minValue: 0,
+          minValue: 1,
           maxValue: 20
         },
         intInput: {
           value: 10,
-          minValue: 0,
+          minValue: 1,
           maxValue: 20
         },
         wisInput: {
           value: 10,
-          minValue: 0,
+          minValue: 1,
           maxValue: 20
         },
         chaInput: {
           value: 10,
-          minValue: 0,
+          minValue: 1,
           maxValue: 20
         },
         charOptions: {
@@ -161,7 +172,6 @@ export default {
       profBonus(){
         return Math.floor((this.charLvl.value -1) / 4) +2
       },
-
       
     },
     watch:{},
@@ -352,6 +362,15 @@ export default {
           this.classes.lvls.forEach(lvl => {
             lvl.maxValue = this.charLvl.maxValue - (this.charLvl.value - lvl.value);
           });
+        },
+
+        abilityModifier(ability){
+          if(ability.value < 12){
+            return Math.floor((ability.value) / 2) -5
+          }
+          else{
+            return "+" + String(Math.floor((ability.value) / 2) -5)
+          }
         },
 
         onWindowLoad(){

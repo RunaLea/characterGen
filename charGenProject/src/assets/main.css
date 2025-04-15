@@ -47,20 +47,42 @@
         font-size: var(--text-xs);
         accent-color: var(--color-mid);
         width: 130%;
+        transition: 0.2s;
     }
 
     select::-webkit-scrollbar {
         width: 0;
     }
 
-    option{
+    select:hover {
+        scale: 100% 110%;
+    }
+
+    option {
         background-color: var(--color-dark);
         accent-color: var(--color-mid);
     }
 
-    button{
+    button {
         border: 1px solid;
         border-radius: 4px;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        scale: 94%;
+    }
+
+    button:active {
+        animation-name: buttonClick;
+        animation-duration: 0.5s;
+    }
+
+    @keyframes buttonClick {
+        0%      {scale: 110%;}
+        25%     {scale: 80%;}
+        50%     {scale: 105%;}
+        100%    {scale: 100%;}
     }
 }
 
@@ -142,7 +164,7 @@
 @media (width >= 48rem ){
     @layer components{
         .column-elem{
-            font-size: var(--text-sm);
+            font-size: 8pt;
         }
     }
 
@@ -158,6 +180,14 @@
         select{
             width: 150%;
             font-size: var(--text-xs);
+        }
+    }
+}
+
+@media (width >= 64rem){
+    @layer components{
+        .column-elem{
+            font-size: var(--text-sm);
         }
     }
 }

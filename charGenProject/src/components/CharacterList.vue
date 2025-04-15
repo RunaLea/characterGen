@@ -1,14 +1,16 @@
 <template>
 <div class="row-space-around pb-2 font-bold">
-  <div class="column-elem w-[20%]">Name</div>
-  <div class="column-elem w-[20%]">Level</div>
-  <div class="column-elem w-[20%]">Race</div>
+  <div class="column-elem w-[5%]">Name</div>
+  <div class="column-elem w-[5%]">Level</div>
+  <div class="column-elem w-[5%]">Race</div>
+  <div class="column-elem w-[5%]">Class</div>
 </div>
 <!-- Makes a !!constant!! for every character in characters and adds the name, lvl and race to the list.-->
 <div v-if="characters.length !== 0" v-for="entry in characters" :key="entry.id" class="row-space-around">
-  <div class="column-elem w-[20%]">{{ entry.char_name }}</div>
-  <div class="column-elem w-[20%]">{{ charLvl(entry) }}</div>
-  <div class="column-elem w-[20%]">{{ entry.race_title }}</div>
+  <div class="column-elem w-[5%]">{{ entry.char_name }}</div>
+  <div class="column-elem w-[5%]">{{ charLvl(entry) }}</div>
+  <div class="column-elem w-[5%]">{{ entry.race_title }}</div>
+  <div class="column-elem w-[5%]">{{ charClass(entry) }}</div>
 </div>
 </template>
 <script>
@@ -68,6 +70,15 @@ export default {
         }
         else{
           return character.class_lvl
+        }
+      },
+
+      charClass(character){
+        if(Array.isArray(character.class_title)){
+          return character.class_title.toString()
+        }
+        else{
+          return character.class_title
         }
       },
 
