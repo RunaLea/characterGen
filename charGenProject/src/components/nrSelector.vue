@@ -1,57 +1,77 @@
 <template>
-    <div class="nr-selector">
-        <div class="mx-1">{{input.value}}</div>
-        <div v-if="this.input" class="ml-1">
-        <button @click="updateNr(1)">ᐃ</button>
-        <button @click="updateNr(-1)">ᐁ</button>
-    </div>
+    <div class="flex flex-row items-center p-1">
+        <div class="flex screen bg-black mx-1 mt-2 w-12 h-18 text-center items-center justify-center"> {{ modelValue }} </div>
+        <div class="flex flex-col">
+            <button 
+                @mousedown="startHold(1)"
+                @mouseup="stopHold"
+                @mouseleave="stopHold"
+                @touchstart.prevent="startHold(1)"
+                @touchend="stopHold" 
+                class="w-8 h-7 rounded-t-full" 
+                :disabled="modelValue===maxValue"
+            >ᐃ</button>
+            <button 
+                @mousedown="startHold(-1)"
+                @mouseup="stopHold"
+                @mouseleave="stopHold"
+                @touchstart.prevent="startHold(-1)"
+                @touchend="stopHold"
+                class="w-8 h-7 rounded-b-full"
+                :disabled="modelValue===minValue"
+            >ᐁ</button>
+        </div>
     </div>
 </template>
-<script>
-export default{
-    props:[
-        'input'
-    ],
-    methods: {
-        updateNr(changeValue){
-          this.input.value += changeValue;
-          if(this.input.value < this.input.minValue){
-            this.input.value = this.input.minValue
-          }
-          else if(this.input.value > this.input.maxValue){
-            this.input.value = this.input.maxValue
-          }
-        }
+
+<script setup lang="ts">
+    import { ref } from 'vue';
+
+    const props = defineProps<{
+        modelValue: number;
+        minValue: number;
+        maxValue: number;
+    }>();
+
+    const emit = defineEmits<{
+    (e: 'update:modelValue', value: number): void;
+    }>();
+
+    let interval: ReturnType<typeof setInterval> | null = null;
+    let acceleration = ref(1);
+    let holdTime = 0;
+
+    function updateNr(changeValue: number) {
+    let newValue = props.modelValue + changeValue;
+
+    if (newValue < props.minValue) {
+        newValue = props.minValue;
+    } else if (newValue > props.maxValue) {
+        newValue = props.maxValue;
     }
-}
+
+    emit('update:modelValue', newValue);
+    }
+
+    function startHold(change: number) {
+        acceleration.value = 1;
+        holdTime = 0;
+
+        updateNr(change * acceleration.value); // initial tick
+
+        interval = setInterval(() => {
+            holdTime++;
+            acceleration.value = Math.min(holdTime, 8);
+            updateNr(change * acceleration.value);
+        }, 100); // every 100ms 
+    }
+
+    function stopHold() {
+        if (interval) {
+            clearInterval(interval);
+            interval = null;
+        }
+        acceleration.value = 1;
+        holdTime = 0;
+    }
 </script>
-<style scoped>
-.nrSelector{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border-style: solid;
-    border-color: rgb(200, 200, 200);
-    padding: 4px;
-    width: 4em;
-}
-.buttonContainer{
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: space-between;
-    height: 2.8em;
-}
-button{
-    display: flex;
-    height: 1.5em;
-    width: 2em;
-    justify-content: center;
-    align-items: center;
-    border-color: rgb(200, 200, 200);
-    background-color: rgba(0, 0, 0, 0);
-    font-size: smaller;
-    color: rgb(200, 200, 200);
-}
-</style>
